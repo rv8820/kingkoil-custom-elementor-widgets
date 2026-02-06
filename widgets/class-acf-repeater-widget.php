@@ -12,9 +12,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Elementor widget that renders an ACF repeater field.
  *
- * Automatically detects all ACF repeater fields and their sub-fields.
- * Each repeater row is rendered as a fluid-width inline item using flexbox.
- * Handles image, text, and other common ACF field types.
+ * Two rendering modes:
+ * 1. Template mode: Select an Elementor template to render for each row.
+ *    Use [acf_sub name="field"] shortcode in the template to output sub-field values.
+ * 2. Auto mode: Automatically renders all sub-fields based on their type.
  */
 class ACF_Repeater_Widget extends Widget_Base {
 
@@ -35,7 +36,7 @@ class ACF_Repeater_Widget extends Widget_Base {
     }
 
     public function get_keywords() {
-        return [ 'acf', 'repeater', 'custom fields', 'list', 'highlight' ];
+        return [ 'acf', 'repeater', 'custom fields', 'list', 'highlight', 'template' ];
     }
 
     public function get_style_depends() {
@@ -93,6 +94,27 @@ class ACF_Repeater_Widget extends Widget_Base {
         return acf_get_field( $field_key );
     }
 
+    /**
+     * Get all Elementor templates for the dropdown.
+     */
+    private function get_elementor_templates() {
+        $options = [ '' => __( '— None (auto-render) —', 'kingkoil-custom-elementor-widgets' ) ];
+
+        $templates = get_posts( [
+            'post_type'      => 'elementor_library',
+            'post_status'    => 'publish',
+            'posts_per_page' => -1,
+            'orderby'        => 'title',
+            'order'          => 'ASC',
+        ] );
+
+        foreach ( $templates as $template ) {
+            $options[ $template->ID ] = $template->post_title;
+        }
+
+        return $options;
+    }
+
     protected function register_controls() {
 
         /*--------------------------------------------------------------
@@ -110,11 +132,51 @@ class ACF_Repeater_Widget extends Widget_Base {
             'default' => '',
         ] );
 
+        $this->add_control( 'item_template', [
+            'label'       => __( 'Item Template', 'kingkoil-custom-elementor-widgets' ),
+            'type'        => Controls_Manager::SELECT,
+            'options'     => $this->get_elementor_templates(),
+            'default'     => '',
+            'description' => __( 'Select an Elementor template to render for each repeater row. Use <code>[acf_sub name="field_name"]</code> shortcode in the template. Leave empty to auto-render all sub-fields.', 'kingkoil-custom-elementor-widgets' ),
+        ] );
+
         $this->add_control( 'empty_message', [
             'label'       => __( 'Empty Message', 'kingkoil-custom-elementor-widgets' ),
             'type'        => Controls_Manager::TEXT,
             'default'     => '',
             'description' => __( 'Shown when the repeater has no rows. Leave blank to output nothing.', 'kingkoil-custom-elementor-widgets' ),
+        ] );
+
+        $this->end_controls_section();
+
+        /*--------------------------------------------------------------
+         * Content tab — Template shortcode reference
+         *------------------------------------------------------------*/
+        $this->start_controls_section( 'section_shortcode_help', [
+            'label'     => __( 'Template Shortcodes', 'kingkoil-custom-elementor-widgets' ),
+            'tab'       => Controls_Manager::TAB_CONTENT,
+            'condition' => [
+                'item_template!' => '',
+            ],
+        ] );
+
+        $this->add_control( 'shortcode_help', [
+            'type'            => Controls_Manager::RAW_HTML,
+            'raw'             => '
+                <p style="margin-bottom:10px;">Use these shortcodes in your template:</p>
+                <code style="display:block;margin-bottom:5px;">[acf_sub name="field_name"]</code>
+                <code style="display:block;margin-bottom:5px;">[acf_sub name="image" type="image"]</code>
+                <code style="display:block;margin-bottom:5px;">[acf_sub name="image" type="image_url"]</code>
+                <code style="display:block;margin-bottom:10px;">[acf_sub name="link" type="url"]</code>
+                <p><strong>Attributes:</strong></p>
+                <ul style="margin-left:15px;list-style:disc;">
+                    <li><code>name</code> — ACF sub-field name (required)</li>
+                    <li><code>type</code> — image, image_url, url, html</li>
+                    <li><code>size</code> — Image size (thumbnail, medium, large, full)</li>
+                    <li><code>class</code> — CSS class for the output</li>
+                </ul>
+            ',
+            'content_classes' => 'elementor-panel-alert',
         ] );
 
         $this->end_controls_section();
@@ -190,11 +252,14 @@ class ACF_Repeater_Widget extends Widget_Base {
         $this->end_controls_section();
 
         /*--------------------------------------------------------------
-         * Style tab — Individual item
+         * Style tab — Individual item (auto-render mode only)
          *------------------------------------------------------------*/
         $this->start_controls_section( 'section_style_item', [
-            'label' => __( 'Item', 'kingkoil-custom-elementor-widgets' ),
-            'tab'   => Controls_Manager::TAB_STYLE,
+            'label'     => __( 'Item', 'kingkoil-custom-elementor-widgets' ),
+            'tab'       => Controls_Manager::TAB_STYLE,
+            'condition' => [
+                'item_template' => '',
+            ],
         ] );
 
         $this->add_control( 'item_direction', [
@@ -280,11 +345,14 @@ class ACF_Repeater_Widget extends Widget_Base {
         $this->end_controls_section();
 
         /*--------------------------------------------------------------
-         * Style tab — Image
+         * Style tab — Image (auto-render mode only)
          *------------------------------------------------------------*/
         $this->start_controls_section( 'section_style_image', [
-            'label' => __( 'Image', 'kingkoil-custom-elementor-widgets' ),
-            'tab'   => Controls_Manager::TAB_STYLE,
+            'label'     => __( 'Image', 'kingkoil-custom-elementor-widgets' ),
+            'tab'       => Controls_Manager::TAB_STYLE,
+            'condition' => [
+                'item_template' => '',
+            ],
         ] );
 
         $this->add_responsive_control( 'image_width', [
@@ -339,11 +407,14 @@ class ACF_Repeater_Widget extends Widget_Base {
         $this->end_controls_section();
 
         /*--------------------------------------------------------------
-         * Style tab — Text
+         * Style tab — Text (auto-render mode only)
          *------------------------------------------------------------*/
         $this->start_controls_section( 'section_style_text', [
-            'label' => __( 'Text', 'kingkoil-custom-elementor-widgets' ),
-            'tab'   => Controls_Manager::TAB_STYLE,
+            'label'     => __( 'Text', 'kingkoil-custom-elementor-widgets' ),
+            'tab'       => Controls_Manager::TAB_STYLE,
+            'condition' => [
+                'item_template' => '',
+            ],
         ] );
 
         $this->add_control( 'text_color', [
@@ -378,6 +449,7 @@ class ACF_Repeater_Widget extends Widget_Base {
     protected function render() {
         $settings       = $this->get_settings_for_display();
         $field_key      = $settings['repeater_field'];
+        $template_id    = $settings['item_template'];
         $empty_message  = $settings['empty_message'];
 
         if ( empty( $field_key ) ) {
@@ -396,8 +468,8 @@ class ACF_Repeater_Widget extends Widget_Base {
             return;
         }
 
-        $field_name     = $field_obj['name'];
-        $sub_fields     = $field_obj['sub_fields'] ?? [];
+        $field_name = $field_obj['name'];
+        $sub_fields = $field_obj['sub_fields'] ?? [];
 
         if ( ! have_rows( $field_name ) ) {
             if ( $empty_message ) {
@@ -408,6 +480,36 @@ class ACF_Repeater_Widget extends Widget_Base {
 
         echo '<div class="kingkoil-acf-repeater">';
 
+        if ( $template_id ) {
+            // Template mode: render the selected Elementor template for each row.
+            $this->render_with_template( $field_name, (int) $template_id );
+        } else {
+            // Auto mode: render all sub-fields automatically.
+            $this->render_auto( $field_name, $sub_fields );
+        }
+
+        echo '</div>';
+    }
+
+    /**
+     * Render repeater rows using an Elementor template.
+     */
+    private function render_with_template( $field_name, $template_id ) {
+        while ( have_rows( $field_name ) ) : the_row();
+            echo '<div class="kingkoil-acf-repeater__item kingkoil-acf-repeater__item--template">';
+
+            // Render the Elementor template. Shortcodes like [acf_sub] will
+            // resolve against the current repeater row context set by the_row().
+            echo \Elementor\Plugin::$instance->frontend->get_builder_content_for_display( $template_id );
+
+            echo '</div>';
+        endwhile;
+    }
+
+    /**
+     * Render repeater rows by auto-detecting sub-fields.
+     */
+    private function render_auto( $field_name, $sub_fields ) {
         while ( have_rows( $field_name ) ) : the_row();
             echo '<div class="kingkoil-acf-repeater__item">';
 
@@ -439,8 +541,6 @@ class ACF_Repeater_Widget extends Widget_Base {
 
             echo '</div>';
         endwhile;
-
-        echo '</div>';
     }
 
     /**
