@@ -137,7 +137,7 @@ class ACF_Repeater_Widget extends Widget_Base {
             'type'        => Controls_Manager::SELECT,
             'options'     => $this->get_elementor_templates(),
             'default'     => '',
-            'description' => __( 'Select an Elementor template to render for each repeater row. Use <code>[acf_sub name="field_name"]</code> shortcode in the template. Leave empty to auto-render all sub-fields.', 'kingkoil-custom-elementor-widgets' ),
+            'description' => __( 'Select an Elementor template to render for each repeater row. Use ACF Repeater dynamic tags to pull sub-field values. Leave empty to auto-render all sub-fields.', 'kingkoil-custom-elementor-widgets' ),
         ] );
 
         $this->add_control( 'empty_message', [
@@ -150,31 +150,31 @@ class ACF_Repeater_Widget extends Widget_Base {
         $this->end_controls_section();
 
         /*--------------------------------------------------------------
-         * Content tab — Template shortcode reference
+         * Content tab — Dynamic tags reference
          *------------------------------------------------------------*/
-        $this->start_controls_section( 'section_shortcode_help', [
-            'label'     => __( 'Template Shortcodes', 'kingkoil-custom-elementor-widgets' ),
+        $this->start_controls_section( 'section_dynamic_tags_help', [
+            'label'     => __( 'Using Dynamic Tags', 'kingkoil-custom-elementor-widgets' ),
             'tab'       => Controls_Manager::TAB_CONTENT,
             'condition' => [
                 'item_template!' => '',
             ],
         ] );
 
-        $this->add_control( 'shortcode_help', [
+        $this->add_control( 'dynamic_tags_help', [
             'type'            => Controls_Manager::RAW_HTML,
             'raw'             => '
-                <p style="margin-bottom:10px;">Use these shortcodes in your template:</p>
-                <code style="display:block;margin-bottom:5px;">[acf_sub name="field_name"]</code>
-                <code style="display:block;margin-bottom:5px;">[acf_sub name="image" type="image"]</code>
-                <code style="display:block;margin-bottom:5px;">[acf_sub name="image" type="image_url"]</code>
-                <code style="display:block;margin-bottom:10px;">[acf_sub name="link" type="url"]</code>
-                <p><strong>Attributes:</strong></p>
-                <ul style="margin-left:15px;list-style:disc;">
-                    <li><code>name</code> — ACF sub-field name (required)</li>
-                    <li><code>type</code> — image, image_url, url, html</li>
-                    <li><code>size</code> — Image size (thumbnail, medium, large, full)</li>
-                    <li><code>class</code> — CSS class for the output</li>
+                <p style="margin-bottom:10px;">In your template, use <strong>Dynamic Tags</strong> to display sub-field values:</p>
+                <ol style="margin-left:15px;margin-bottom:10px;">
+                    <li>Add any Elementor widget (Image, Heading, Text, etc.)</li>
+                    <li>Click the <strong>Dynamic Tags</strong> icon (database icon) in the field</li>
+                    <li>Under <strong>ACF Repeater</strong>, select the appropriate tag:</li>
+                </ol>
+                <ul style="margin-left:15px;list-style:disc;margin-bottom:10px;">
+                    <li><strong>ACF Sub-field</strong> — for text, number, textarea</li>
+                    <li><strong>ACF Sub-field Image</strong> — for image fields</li>
+                    <li><strong>ACF Sub-field URL</strong> — for URL/link fields</li>
                 </ul>
+                <p>Enter the sub-field name (e.g. "title", "icon", "link") in the tag settings.</p>
             ',
             'content_classes' => 'elementor-panel-alert',
         ] );

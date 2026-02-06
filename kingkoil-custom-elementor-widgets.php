@@ -39,7 +39,7 @@ add_action( 'plugins_loaded', function () {
     define( 'KINGKOIL_WIDGETS_URL', plugin_dir_url( __FILE__ ) );
 
     require_once KINGKOIL_WIDGETS_PATH . 'includes/class-plugin.php';
-    require_once KINGKOIL_WIDGETS_PATH . 'includes/shortcodes.php';
+    require_once KINGKOIL_WIDGETS_PATH . 'includes/dynamic-tags.php';
 
     \KingKoil\Elementor\Plugin::instance();
 } );
