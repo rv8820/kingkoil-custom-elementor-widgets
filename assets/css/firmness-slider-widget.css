@@ -1,0 +1,108 @@
+/* ==========================================================================
+   KingKoil — Firmness Slider Widget
+   ========================================================================== */
+
+.kk-firmness-slider {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* --------------------------------------------------------------------------
+   Current firmness title
+   -------------------------------------------------------------------------- */
+.kk-firmness-slider__title {
+    margin-bottom: 8px; /* overridden by Elementor control */
+    font-size: 1rem;
+    color: inherit;
+}
+
+/* --------------------------------------------------------------------------
+   Track wrapper
+   Provides the positioning context for the dot.
+   -------------------------------------------------------------------------- */
+.kk-firmness-slider__track-wrap {
+    position: relative;
+    /* Vertical padding gives the dot (which is taller than the track)
+       room to breathe without clipping. */
+    padding: 8px 0;
+}
+
+/* --------------------------------------------------------------------------
+   Segments — the coloured dashes that form the track
+   -------------------------------------------------------------------------- */
+.kk-firmness-slider__segments {
+    display: flex;
+    align-items: center;
+    gap: 6px; /* overridden by Elementor control */
+    width: 100%;
+}
+
+.kk-firmness-slider__segment {
+    flex: 1;
+    height: 8px;           /* overridden by Elementor control */
+    border-radius: 4px;    /* overridden by Elementor control */
+    /* background-color is set inline via PHP colour interpolation */
+}
+
+/* --------------------------------------------------------------------------
+   Dot — the circular position indicator
+   -------------------------------------------------------------------------- */
+.kk-firmness-slider__dot {
+    position: absolute;
+    top: 50%;
+    /* `left` is set inline by PHP as a percentage.
+       The dot is translated so its centre sits on that position. */
+    transform: translate(-50%, -50%);
+
+    width: 20px;          /* overridden by Elementor control */
+    height: 20px;         /* overridden by Elementor control */
+    border-radius: 50%;
+    background-color: #1a6faa; /* overridden by Elementor control */
+
+    /* Sit above the segments */
+    z-index: 1;
+}
+
+/* --------------------------------------------------------------------------
+   Labels row
+   Three labels: left-aligned (Soft), centred (Medium), right-aligned (Extra Firm)
+   -------------------------------------------------------------------------- */
+.kk-firmness-slider__labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px; /* overridden by Elementor control */
+}
+
+.kk-firmness-slider__label {
+    font-size: 0.875rem;
+    color: inherit;
+    flex: 1;
+}
+
+.kk-firmness-slider__label--start {
+    text-align: left;
+}
+
+.kk-firmness-slider__label--mid {
+    text-align: center;
+}
+
+.kk-firmness-slider__label--end {
+    text-align: right;
+}
+
+/* --------------------------------------------------------------------------
+   Editor placeholder notice
+   -------------------------------------------------------------------------- */
+.kk-firmness-slider--placeholder > p {
+    margin-bottom: 8px;
+}
+
+/* --------------------------------------------------------------------------
+   Fallback notice (shown when no_firmness_behavior = error)
+   -------------------------------------------------------------------------- */
+.kk-firmness-error {
+    font-style: italic;
+    color: #999;
+    margin: 0;
+}

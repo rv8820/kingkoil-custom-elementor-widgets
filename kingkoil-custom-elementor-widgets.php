@@ -2,7 +2,7 @@
 /**
  * Plugin Name: KingKoil Custom Elementor Widgets
  * Description: Custom Elementor widgets for the KingKoil ecommerce site. Includes ACF Repeater widget and more.
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: KingKoil
  * Text Domain: kingkoil-custom-elementor-widgets
  * Requires PHP: 7.4

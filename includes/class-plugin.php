@@ -47,5 +47,8 @@ final class Plugin {
     public function register_widgets( $widgets_manager ) {
         require_once KINGKOIL_WIDGETS_PATH . 'widgets/class-acf-repeater-widget.php';
         $widgets_manager->register( new Widgets\ACF_Repeater_Widget() );
+
+        require_once KINGKOIL_WIDGETS_PATH . 'widgets/class-firmness-slider-widget.php';
+        $widgets_manager->register( new Widgets\Firmness_Slider_Widget() );
     }
 }
