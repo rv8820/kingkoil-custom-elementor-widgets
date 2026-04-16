@@ -40,9 +40,16 @@
 .kk-firmness-slider__segment {
     flex: 1;
     height: 8px;           /* overridden by Elementor control */
-    border-radius: 4px;    /* overridden by Elementor control */
-    /* background-color is set inline via PHP colour interpolation */
+    border-radius: 0;
 }
+
+/* 6-step gradient: Soft (#daeef9) → Extra Firm (#5aaedd) */
+.kk-firmness-slider__segment:nth-child(1) { background-color: rgb(218, 238, 249); }
+.kk-firmness-slider__segment:nth-child(2) { background-color: rgb(190, 222, 243); }
+.kk-firmness-slider__segment:nth-child(3) { background-color: rgb(162, 206, 237); }
+.kk-firmness-slider__segment:nth-child(4) { background-color: rgb(134, 190, 231); }
+.kk-firmness-slider__segment:nth-child(5) { background-color: rgb(106, 174, 225); }
+.kk-firmness-slider__segment:nth-child(6) { background-color: rgb(90, 174, 221); }
 
 /* --------------------------------------------------------------------------
    Dot — the circular position indicator
@@ -57,7 +64,7 @@
     width: 20px;          /* overridden by Elementor control */
     height: 20px;         /* overridden by Elementor control */
     border-radius: 50%;
-    background-color: #1a6faa; /* overridden by Elementor control */
+    background-color: #009FDF; /* overridden by Elementor control */
 
     /* Sit above the segments */
     z-index: 1;

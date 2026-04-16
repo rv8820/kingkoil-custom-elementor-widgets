@@ -2,7 +2,7 @@
 /**
  * Plugin Name: KingKoil Custom Elementor Widgets
  * Description: Custom Elementor widgets for the KingKoil ecommerce site. Includes ACF Repeater widget and more.
- * Version: 1.0.1
+ * Version: 1.0.41
  * Author: KingKoil
  * Text Domain: kingkoil-custom-elementor-widgets
  * Requires PHP: 7.4
@@ -34,9 +34,18 @@ add_action( 'plugins_loaded', function () {
         return;
     }
 
-    define( 'KINGKOIL_WIDGETS_VERSION', '1.0.0' );
+    define( 'KINGKOIL_WIDGETS_VERSION', '1.0.41' );
     define( 'KINGKOIL_WIDGETS_PATH', plugin_dir_path( __FILE__ ) );
     define( 'KINGKOIL_WIDGETS_URL', plugin_dir_url( __FILE__ ) );
+
+    add_action( 'wp_enqueue_scripts', function() {
+    wp_enqueue_style(
+            'kingkoil-firmness-slider',
+            KINGKOIL_WIDGETS_URL . 'assets/css/firmness-slider-widget.css',
+            [],
+            KINGKOIL_WIDGETS_VERSION
+        );
+    } );
 
     require_once KINGKOIL_WIDGETS_PATH . 'includes/class-plugin.php';
     require_once KINGKOIL_WIDGETS_PATH . 'includes/dynamic-tags.php';
