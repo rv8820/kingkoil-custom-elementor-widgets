@@ -50,5 +50,8 @@ final class Plugin {
 
         require_once KINGKOIL_WIDGETS_PATH . 'widgets/class-firmness-slider-widget.php';
         $widgets_manager->register( new Widgets\Firmness_Slider_Widget() );
+
+        require_once KINGKOIL_WIDGETS_PATH . 'widgets/class-product-weight-widget.php';
+        $widgets_manager->register( new Widgets\Product_Weight_Widget() );
     }
 }
